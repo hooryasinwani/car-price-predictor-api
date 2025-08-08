@@ -1,5 +1,5 @@
 # version of Python
-FROM python:3.9-slim
+FROM python:3.10-slim
 
 # Setting the working directory inside the container to /app
 WORKDIR /app
