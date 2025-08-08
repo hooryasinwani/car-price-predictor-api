@@ -1,0 +1,10 @@
+{
+    "Brand": "Toyota",
+    "Model": "Camry",
+    "Year": 2020,
+    "Engine_Size": 2.5,
+    "Fuel_Type": "Petrol",
+    "Transmission": "Automatic",
+    "Mileage": 30000,
+    "Owner_Count": 1
+}

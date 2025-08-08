@@ -2,19 +2,18 @@ import pandas as pd
 import pickle as pk
 from flask import Flask, request, jsonify
 
-
 app = Flask(__name__)
-
 
 model = pk.load(open('model.pkl', 'rb'))
 
-
 @app.route('/predict', methods=['POST'])
 def predict():
-   
+    print("[DEBUG] --- Request received ---", flush=True)
     json_data = request.get_json()
+    print(f"[DEBUG] --- JSON data parsed: {json_data} ---", flush=True)
 
     df = pd.DataFrame(json_data, index=[0])
+    print("[DEBUG] --- DataFrame created ---", flush=True)
 
     df['Fuel_Type'].replace(['Diesel' ,'Hybrid' ,'Electric', 'Petrol'], [1, 2, 3, 4], inplace=True)
     df['Model'].replace(['Rio', 'Malibu', 'GLA', 'Q5', 'Golf' ,'Camry', 'Civic' ,'Sportage' ,'RAV4',
@@ -25,19 +24,13 @@ def predict():
     df['Brand'].replace(
     ['Kia', 'Chevrolet', 'Mercedes', 'Audi', 'Volkswagen', 'Toyota', 'Honda', 'BMW', 'Hyundai', 'Ford'],
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], inplace=True)
-    # not replacing Owner_Count here as it's expected to be a number already.
-  
+    print("[DEBUG] --- Preprocessing complete ---", flush=True)
 
-
+    print("[DEBUG] --- Calling model.predict() ---", flush=True)
     prediction = model.predict(df)
+    print("[DEBUG] --- Prediction successful ---", flush=True)
 
-    # Returning the prediction as a JSON response
-    # converting the numpy array to a list to make it JSON serializable
     return jsonify({'predicted_price': prediction[0]})
 
-#running the app
 if __name__ == '__main__':
-    # The host='0.0.0.0' makes it accessible from my network,
-    # which is useful for when containerizing it with Docker. 
     app.run(host='0.0.0.0', port=5001)
-    
